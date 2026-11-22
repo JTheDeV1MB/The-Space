@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Space</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f0f2f5;padding-bottom:75px}
+header{background:linear-gradient(90deg,#1877f2,#8b5cf6);color:#fff;padding:14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+header h1{font-size:22px}
+header button{background:#fff;border:0;padding:7px 12px;border-radius:20px;font-weight:bold}
+.card{background:#fff;margin:10px;border-radius:12px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.stories{display:flex;gap:10px;overflow-x:auto;padding:5px}
+.story{min-width:90px;height:140px;border-radius:12px;background:linear-gradient(180deg,#1877f2,#8b5cf6);color:#fff;padding:8px;display:flex;flex-direction:column;justify-content:space-between}
+.story span{background:#fff;color:#000;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+input,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;margin-top:8px}
+.btn{background:#1877f2;color:#fff;border:0;padding:10px;border-radius:20px;width:100%;font-weight:bold;margin-top:8px}
+.post-top{display:flex;gap:10px;align-items:center}
+.avatar{width:42px;height:42px;border-radius:50%;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:22px}
+.actions{display:flex;justify-content:space-between;margin-top:10px;border-top:1px solid #eee;padding-top:8px}
+.actions button{border:0;background:none;font-weight:bold}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:12px;border-top:1px solid #ddd}
+nav button{border:0;background:none;font-size:15px;font-weight:bold}
+.hidden{display:none}
+.friend{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.friend button{background:#1877f2;color:#fff;border:0;padding:6px 12px;border-radius:20px}
+</style>
+</head>
+<body>
+<header><h1>The Space</h1><button onclick="alert('Search coming in v2')">🔍 Search</button></header>
+<div id="home">
+<div class="card"><div class="stories">
+<div class="story"><span>➕</span><b>Your Story</b></div>
+<div class="story"><span>🔥</span><b>Mike</b></div>
+<div class="story"><span>🎮</span><b>Jay</b></div>
+<div class="story"><span>💜</span><b>Lexi</b></div>
+</div></div>
+<div class="card">
+<div class="post-top"><div class="avatar">😎</div><b>Jay Ray</b></div>
+<textarea id="postText" placeholder="What's on your mind, Jay?"></textarea>
+<button class="btn" onclick="makePost()">Post to The Space</button>
+</div>
+<div id="feed"></div>
+<div class="card"><h3>People You May Know</h3>
+<div class="friend"><span>👩 Lexi - Mesa, AZ</span><button onclick="this.innerText='Added ✅'">Add Friend</button></div>
+<div class="friend"><span>👨 Mike - Gamer</span><button onclick="this.innerText='Added ✅'">Add Friend</button></div>
+<div class="friend"><span>👩 Sarah - Vinted</span><button onclick="this.innerText='Added ✅'">Add Friend</button></div>
+</div>
+</div>
+<div id="friends" class="hidden">
+<div class="card"><h2>Friends</h2><p>Your friends will show here.</p></div>
+<div class="card"><h3>Groups</h3><p>🎮 Gamers • 💰 Hustlers • 👕 Vinted Finds • 📍 Mesa AZ</p></div>
+</div>
+<div id="market" class="hidden">
+<div class="card"><h2>Marketplace</h2><p>👟 Shoes - $40 • 📱 Phone - $120 • 🎮 Controller - $25</p><button class="btn" onclick="alert('Create Listing coming in v2')">+ Create Listing</button></div>
+</div>
+<div id="profile" class="hidden">
+<div class="card"><div class="avatar" style="width:70px;height:70px;font-size:35px">😎</div><h2>Jay Ray</h2><p>@jtheray • Mesa, AZ</p><p>Building The Space. Your Space. Your People. Your Rules.</p><button class="btn">Edit Profile</button></div>
+<div class="card"><h3>About</h3><p>Posts: <span id="postCount">0</span> • Friends: 128 • Joined: 2026</p></div>
+</div>
+<nav>
+<button onclick="show('home')">🏠 Home</button>
+<button onclick="show('friends')">👥 Friends</button>
+<button onclick="show('market')">🛍️ Market</button>
+<button onclick="show('profile')">👤 You</button>
+</nav>
+<script>
+let posts=[
+{name:"Mike",emoji:"🔥",text:"Just hit Lv 30 let's gooo",likes:12},
+{name:"Lexi",emoji:"💜",text:"New Vinted drop just posted!",likes:8},
+{name:"Jay Ray",emoji:"😎",text:"Welcome to The Space. This is OUR Facebook now.",likes:42}
+];
+function render(){
+let h="";
+posts.forEach((p,i)=>{
+h+=`<div class="card"><div class="post-top"><div class="avatar">${p.emoji}</div><div><b>${p.name}</b><br><small>Just now • 🌎 Public</small></div></div><p style="margin:10px 0">${p.text}</p><div class="actions"><button onclick="likePost(${i})">❤️ Like (${p.likes})</button><button onclick="alert('Comments coming in v2')">💬 Comment</button><button onclick="alert('Shared!')">↗️ Share</button></div></div>`;
+});
+document.getElementById("feed").innerHTML=h;
+document.getElementById("postCount").innerText=posts.filter(p=>p.name==="Jay Ray").length;
+}
+function likePost(i){posts[i].likes++;render();}
+function makePost(){
+let t=document.getElementById("postText").value;
+if(!t) return alert("Type something first");
+posts.unshift({name:"Jay Ray",emoji:"😎",text:t,likes:0});
+document.getElementById("postText").value="";
+render();
+}
+function show(id){
+["home","friends","market","profile"].forEach(x=>document.getElementById(x).classList.add("hidden"));
+document.getElementById(id).classList.remove("hidden");
+window.scrollTo(0,0);
+}
+render();
+</script>
+</body>
+</html>
